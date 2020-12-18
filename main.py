@@ -1,10 +1,16 @@
+import functools
 import sys
+
 from data.json import (
     load_json,
     output_json,
     simplify_collection,
     raw_parse_item,
     JsonBaseException,
+)
+from data.column_parsing import (
+    line_parse_regex_split,
+    fix_double_space_in_second_column,
 )
 
 
@@ -34,16 +40,37 @@ def load_and_clean(data_path):
     return simplified_data
 
 
+def columns_raw_to_naive(lines):
+    columnLines = [line_parse_regex_split(line) for line in lines.split("\n")]
+    out = [[], [], [], []]
+    for lineIdx, line in enumerate(columnLines):
+        line = fix_double_space_in_second_column(line)
+        for idx, col in enumerate(line):
+            out[idx].append(col)
+    return out
+
+
+def augment_entry_with_column_data(entry):
+    entry.setdefault("columnsData", columns_raw_to_naive(entry.get("columnsText", "")))
+    return entry
+
+
+def refine_column_data(data):
+    return [augment_entry_with_column_data(entry) for entry in data]
+
+
 def separate_notes(data):
-    return [parseEntry(idx, scheduleEntry) for idx, scheduleEntry in enumerate(data)]
+    parsed = [parseEntry(idx, scheduleEntry) for idx, scheduleEntry in enumerate(data)]
+    flatList = [item for elem in parsed for item in elem]
+    return flatList
 
 
 def program():
     try:
-        out = separate_notes(
+        stage1 = separate_notes(
             load_and_clean("fixtures/schedule_of_notices_of_lease_examples.json")
         )
-        print(output_json(out))
+        print(output_json(refine_column_data(stage1)))
     except BaseException as e:
         print(e, file=sys.stderr)
         exit(None, 2)
