@@ -15,3 +15,11 @@ def load_json(path):
             return json.load(json_file)
     except (OSError, AttributeError, TypeError) as e:
         raise JsonLoadException("Unable to load file")
+
+
+def simplify_collection(data):
+    """
+    Removes outer redundant envelope from results
+    """
+    raw = [item.get("leaseschedule", {}).get("scheduleEntry", None) for item in data]
+    return [item for item in raw if item]
