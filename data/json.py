@@ -13,6 +13,19 @@ class JsonLoadException(JsonBaseException):
     pass
 
 
+def output_json(data):
+    """
+    Utility method used to encapsulate dependency
+    """
+    try:
+        return json.dumps(data)
+    except BaseException as e:
+        """
+        Deliberately capturing all
+        """
+        raise JsonBaseException(e)
+
+
 def load_json(path):
     try:
         with open(path) as json_file:
@@ -48,9 +61,7 @@ def raw_parse_item(entryIndex, itemIndex, itemRawText, itemEntryType):
         out = {
             "entryIndex": entryIndex,
             "itemIndex": itemIndex,
-            "notes": [
-                itemRawText
-            ],
+            "notes": [itemRawText],
             "columnsText": "",
             "itemRawText": itemRawText,
         }
