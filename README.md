@@ -63,3 +63,9 @@ I've chosen to use Pytest testing framework. from within the activated virtual e
     b. Look at fixed width columns
         i. problem with # of columns
     c. parenthesis / continuation word balancing...
+    
+    
+> **NOTE:** I opted to avoid using Pandas, but there is a branch using it and fwf with `StringIO`. It's not that I don't know about Pandas.
+> Given the short-term nature of the task and the fact it's not for production I chose to prioritize other things.
+> Numpy & Pandas have been added as an afterthought in branch with two very rudimentary tests on a branch for Numpy that should not have issues for windows users.
+> [feature/pandas-numpy-fwf](https://github.com/Lewiscowles1986/ow-exploration/tree/feature/pandas-numpy-fwf)
