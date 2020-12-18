@@ -13,5 +13,5 @@ def load_json(path):
     try:
         with open(path) as json_file:
             return json.load(json_file)
-    except OSError as e:
+    except (OSError, AttributeError, TypeError) as e:
         raise JsonLoadException("Unable to load file")
